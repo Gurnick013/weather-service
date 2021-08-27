@@ -13,7 +13,7 @@ export interface IGeo {
 }
 
 export interface IGetInfo {
-  getInfo: Array<IWeather>;  
+  getInfo: any; 
 }
 
 export interface IInfoForStaition {

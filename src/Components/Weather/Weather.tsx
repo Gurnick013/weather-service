@@ -1,35 +1,36 @@
-import { Card } from "antd";
-import Meta from "antd/lib/card/Meta";
 import { FC } from "react";
-import { changeTemtTocelsius, IGetInfo } from "../constants/constants";
+import { IGetInfo } from "../constants/constants";
 import "antd/dist/antd.css";
 import "./Weather.css";
-
-// const { log } = console;
+import Cards from "../Cards/Cards";
 
 const Weather: FC<IGetInfo> = (props) => {
+  const filterArrayCityFromProps = Array.from(new Set(props.getInfo));
 
-const dataInfo: any = props.getInfo
+  const arrayCityInfoFromStorage = Object.entries(sessionStorage);
+  const filterArrayCityInfoFromStorage = arrayCityInfoFromStorage.map(
+    (el: Array<any>) => [el[0], JSON.parse(el[1])]
+  );
+
+  const totalArrayCity = Array.from(
+    new Set([...filterArrayCityInfoFromStorage, ...filterArrayCityFromProps])
+  );
+
+  const itemWeather = !sessionStorage.length
+    ? filterArrayCityFromProps.map((arrInfo: any, index: any) => (
+        <div key={index.toString()} className="wrapper__card">
+          <Cards arrInfo={arrInfo} />
+        </div>
+      ))
+    : totalArrayCity.map((arrInfo: any, index: any) => (
+        <div key={index.toString()} className="wrapper__card">
+          <Cards arrInfo={arrInfo} />
+        </div>
+      ));
 
   return (
     <>
-      <div className="wrapper__card">
-        <Card title='' hoverable style={{ width: 300 }}>
-          <h5>Forecast</h5>
-        </Card>
-        <Card
-          hoverable
-          style={{ width: 240 }}
-          cover={<img alt="img" src={dataInfo[0].icon} />}
-        >
-          <Meta
-            title={`${dataInfo[0].temperature} ${
-              dataInfo[0].temperatureUnit
-            } ${changeTemtTocelsius(dataInfo[0].temperature)} C`}
-            description={dataInfo[0].shortForecast}
-          />
-        </Card>
-      </div>
+      <div className="wrapper">{itemWeather}</div>
     </>
   );
 };
