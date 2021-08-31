@@ -31,6 +31,10 @@ export interface IWeather {
   windSpeed: string;
 }
 
+export interface IArrayInfo {
+  arrInfo: any
+}
+
 export const WEEK = [
   "Monday",
   "Tuesday",

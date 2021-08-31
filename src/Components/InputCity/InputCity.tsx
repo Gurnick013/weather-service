@@ -1,10 +1,6 @@
 import { FC, useState, useEffect } from "react";
-import { Input, Spin } from "antd";
-import {
-  dayToday,
-  IGeo,
-  IInfoForStaition,  
-} from "../constants/constants";
+import { Input } from "antd";
+import { dayToday, IGeo, IInfoForStaition } from "../constants/constants";
 import Weather from "../Weather/Weather";
 import "antd/dist/antd.css";
 
@@ -12,7 +8,7 @@ const { log } = console;
 const { Search } = Input;
 
 const InputCity: FC = () => {
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  // const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [nameCity, setNameCity] = useState<string>("");
   const [geoInfo, setGeoInfo] = useState<IGeo>({ lat: 0, lon: 0 });
   const [infoForStaition, serInfoForStaition] = useState<IInfoForStaition>({
@@ -20,8 +16,8 @@ const InputCity: FC = () => {
     gridX: 0,
     gridY: 0,
   });
-  const [weatherInfo, setWeatherInfo] = useState<any>([]);  
-  
+  const [weatherInfo, setWeatherInfo] = useState<any>([]);
+
   const onSearch = (value: string) => {
     setNameCity(value);
   };
@@ -80,20 +76,32 @@ const InputCity: FC = () => {
               }),
               {}
             );
-          setWeatherInfo( (prevState: any) => { return  [ ...prevState, [nameCity, result]] } );
-          setIsLoaded(true);
-          sessionStorage.setItem(nameCity.toLowerCase(), JSON.stringify(result));
+
+          // setIsLoade(true);
+          sessionStorage.setItem(
+            nameCity.toUpperCase(),
+            JSON.stringify(result)
+          );
+          setWeatherInfo((prevState: any) => {
+            return prevState.filter((el: any) => el[0] === nameCity).length
+              ? [...prevState]
+              : [...prevState, [nameCity, result]];
+          });
         })
         .catch((err) => {
           log(err);
         });
     }
   }, [infoForStaition, nameCity]);
-  
+
   return (
     <div>
-      <Search placeholder="Input USA's city for getting weather" onSearch={onSearch} enterButton />
-      {sessionStorage.length ? (
+      <Search
+        placeholder="Input USA's city for getting weather"
+        onSearch={onSearch}
+        enterButton
+      />
+      {sessionStorage.length || weatherInfo.length ? (
         <Weather getInfo={weatherInfo} />
       ) : (
         <div> Input USA's city for getting weather </div>
