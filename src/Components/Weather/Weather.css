@@ -1,6 +1,7 @@
 .wrapper {
     display: flex;
     flex-wrap: wrap; 
+    justify-content: center;
 }
 
 .wrapper__card {
@@ -10,3 +11,8 @@
     align-items: center;    
 }
 
+.preloaded {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+}

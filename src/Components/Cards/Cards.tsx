@@ -5,8 +5,7 @@ import { changeTemtTocelsius, IArrayInfo } from "../constants/constants";
 import "antd/dist/antd.css";
 import "./Cards.css";
 
-const Cards: FC<IArrayInfo> = ({ arrInfo }) => {
-  console.log(arrInfo[0][1]);
+const Cards: FC<IArrayInfo> = ({ arrInfo }) => { 
   return (
     <>
       <Card title={arrInfo[0][0]} hoverable style={{ width: 250 }}>

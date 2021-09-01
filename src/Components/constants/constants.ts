@@ -13,7 +13,8 @@ export interface IGeo {
 }
 
 export interface IGetInfo {
-  getInfo: any; 
+  data: any;
+  // nameCity: string
 }
 
 export interface IInfoForStaition {
@@ -22,7 +23,7 @@ export interface IInfoForStaition {
   gridY: number;
 }
 
-export interface IWeather {  
+export interface IWeather {
   icon: string;
   name: string;
   shortForecast: string;
@@ -32,7 +33,28 @@ export interface IWeather {
 }
 
 export interface IArrayInfo {
-  arrInfo: any
+  arrInfo: any;
+}
+
+export interface IResponse {
+  icon: string;
+  isDaytime: boolean;
+  name: string;
+  number: number;
+  shortForecast: string;
+  startTime: string;
+  temperature: number;
+  temperatureUnit: string;
+  windDirection: string;
+  windSpeed: string;
+}
+
+export interface IResponseGeo {
+  country: string;
+  lat: number;
+  local_names: any;
+  lon: number;
+  name: string;
 }
 
 export const WEEK = [

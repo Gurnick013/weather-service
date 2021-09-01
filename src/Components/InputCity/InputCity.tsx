@@ -1,6 +1,12 @@
 import { FC, useState, useEffect } from "react";
 import { Input } from "antd";
-import { dayToday, IGeo, IInfoForStaition } from "../constants/constants";
+import {
+  dayToday,
+  IGeo,
+  IInfoForStaition,
+  IResponse,
+  IResponseGeo,
+} from "../constants/constants";
 import Weather from "../Weather/Weather";
 import "antd/dist/antd.css";
 
@@ -8,7 +14,6 @@ const { log } = console;
 const { Search } = Input;
 
 const InputCity: FC = () => {
-  // const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [nameCity, setNameCity] = useState<string>("");
   const [geoInfo, setGeoInfo] = useState<IGeo>({ lat: 0, lon: 0 });
   const [infoForStaition, serInfoForStaition] = useState<IInfoForStaition>({
@@ -17,19 +22,16 @@ const InputCity: FC = () => {
     gridY: 0,
   });
   const [weatherInfo, setWeatherInfo] = useState<any>([]);
-
-  const onSearch = (value: string) => {
-    setNameCity(value);
-  };
-
+  const [data, setData] = useState<any>([]);
+  
   useEffect(() => {
-    if (nameCity) {
+    if (nameCity) {      
       fetch(
         `http://api.openweathermap.org/geo/1.0/direct?q=${nameCity}&appid=bb7a5e128aff50a249f8ae11f0e66f9a`
       )
         .then((data) => data.json())
         .then((response) => {
-          response.map((geo: any) =>
+          response.map((geo: IResponseGeo) =>
             setGeoInfo({
               lat: geo.lat,
               lon: geo.lon,
@@ -41,7 +43,7 @@ const InputCity: FC = () => {
   }, [nameCity]);
 
   useEffect(() => {
-    if (geoInfo.lat && geoInfo.lon)
+    if (geoInfo.lat && geoInfo.lon) {      
       fetch(`https://api.weather.gov/points/${geoInfo.lat},${geoInfo.lon}`)
         .then((data) => data.json())
         .then((response) => {
@@ -54,17 +56,20 @@ const InputCity: FC = () => {
         .catch((err) => {
           log(err);
         });
-  }, [geoInfo]);
+    }
+  }, [geoInfo.lat, geoInfo.lon]);
 
   useEffect(() => {
-    if (infoForStaition.cwa && infoForStaition.gridX && infoForStaition.gridY) {
+    if (infoForStaition.cwa) {      
       fetch(
         `https://api.weather.gov/gridpoints/${infoForStaition.cwa}/${infoForStaition.gridX},${infoForStaition.gridY}/forecast/`
       )
         .then((data) => data.json())
         .then((response) => {
-          const result: any = response.properties.periods
-            .filter((el: any) => el.name === dayToday() || el.name === "Today")
+          const result: Array<IResponse> = response.properties.periods
+            .filter(
+              (el: IResponse) => el.name === dayToday() || el.name === "Today"
+            )
             .reduce(
               (_: any, item: any) => ({
                 icon: item.icon,
@@ -76,33 +81,39 @@ const InputCity: FC = () => {
               }),
               {}
             );
-
-          // setIsLoade(true);
-          sessionStorage.setItem(
-            nameCity.toUpperCase(),
-            JSON.stringify(result)
-          );
-          setWeatherInfo((prevState: any) => {
-            return prevState.filter((el: any) => el[0] === nameCity).length
-              ? [...prevState]
-              : [...prevState, [nameCity, result]];
-          });
+          setWeatherInfo(result);
         })
         .catch((err) => {
           log(err);
         });
     }
-  }, [infoForStaition, nameCity]);
+  }, [infoForStaition]);
+
+  useEffect(() => {
+    const arrInfoCity: any = [];
+    if (nameCity) {
+      arrInfoCity.push([nameCity.toUpperCase(), weatherInfo]);
+      sessionStorage.setItem(
+        nameCity.toUpperCase(),
+        JSON.stringify(weatherInfo)
+      );
+    }
+    setData((prev: any) => {
+      return !prev.length ? arrInfoCity : [...prev, ...arrInfoCity];
+    });
+  }, [weatherInfo]);
+
+  console.log(data);
 
   return (
     <div>
       <Search
         placeholder="Input USA's city for getting weather"
-        onSearch={onSearch}
+        onSearch={(e: string) => setNameCity(e)}
         enterButton
       />
-      {sessionStorage.length || weatherInfo.length ? (
-        <Weather getInfo={weatherInfo} />
+      { sessionStorage.length ? (
+        <Weather data={data} />
       ) : (
         <div> Input USA's city for getting weather </div>
       )}
