@@ -13,8 +13,7 @@ export interface IGeo {
 }
 
 export interface IGetInfo {
-  data: any;
-  // nameCity: string
+  data: any;  
 }
 
 export interface IInfoForStaition {
@@ -41,8 +40,7 @@ export interface IResponse {
   isDaytime: boolean;
   name: string;
   number: number;
-  shortForecast: string;
-  startTime: string;
+  shortForecast: string;  
   temperature: number;
   temperatureUnit: string;
   windDirection: string;

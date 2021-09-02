@@ -6,11 +6,9 @@ import Cards from "../Cards/Cards";
 import { Spin } from "antd";
 import { useEffect } from "react";
 
-const { log } = console;
-
 const Weather: FC<IGetInfo> = ({ data }) => {
+ 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-
   const arrayCityInfoFromStorage = Object.entries(sessionStorage);
   const filterArrayCityInfoFromStorage = arrayCityInfoFromStorage.map(
     (el: Array<any>) => [el[0], JSON.parse(el[1])]
@@ -19,13 +17,12 @@ const Weather: FC<IGetInfo> = ({ data }) => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoaded(true);
-    }, 1000);
-  }, [data]);
-
-  useEffect(() => {
-    setIsLoaded(false);
-  }, [data]);
-
+    }, 1000);    
+    return () => {
+      setIsLoaded(false); 
+    }
+  }, [data]); 
+  
   const itemWeather = filterArrayCityInfoFromStorage.map(
     (arrInfo: any, index: any) => (
       <div key={index.toString()} className="wrapper__card">

@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./Components/App";
+import GlobalWeatherService from "./Components/GlobalWeatherService";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<GlobalWeatherService />, document.getElementById("root"));

@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { Input } from "antd";
+
 import {
   dayToday,
   IGeo,
@@ -9,23 +10,25 @@ import {
 } from "../constants/constants";
 import Weather from "../Weather/Weather";
 import "antd/dist/antd.css";
+import "./WeatherInfo.css";
 
 const { log } = console;
-const { Search } = Input;
+const { Search }: any = Input;
 
-const InputCity: FC = () => {
+const WeatherInfo: FC = () => {
+  const [errorValidation, setErrorValidaion] = useState<boolean>(false);
   const [nameCity, setNameCity] = useState<string>("");
   const [geoInfo, setGeoInfo] = useState<IGeo>({ lat: 0, lon: 0 });
-  const [infoForStaition, serInfoForStaition] = useState<IInfoForStaition>({
+  const [infoForStaition, setInfoForStaition] = useState<IInfoForStaition>({
     cwa: "",
     gridX: 0,
     gridY: 0,
   });
   const [weatherInfo, setWeatherInfo] = useState<any>([]);
   const [data, setData] = useState<any>([]);
-  
+
   useEffect(() => {
-    if (nameCity) {      
+    if (nameCity) {
       fetch(
         `http://api.openweathermap.org/geo/1.0/direct?q=${nameCity}&appid=bb7a5e128aff50a249f8ae11f0e66f9a`
       )
@@ -43,11 +46,11 @@ const InputCity: FC = () => {
   }, [nameCity]);
 
   useEffect(() => {
-    if (geoInfo.lat && geoInfo.lon) {      
+    if (geoInfo.lat && geoInfo.lon) {
       fetch(`https://api.weather.gov/points/${geoInfo.lat},${geoInfo.lon}`)
         .then((data) => data.json())
         .then((response) => {
-          serInfoForStaition({
+          setInfoForStaition({
             cwa: response.properties.cwa,
             gridX: response.properties.gridX,
             gridY: response.properties.gridY,
@@ -60,7 +63,7 @@ const InputCity: FC = () => {
   }, [geoInfo.lat, geoInfo.lon]);
 
   useEffect(() => {
-    if (infoForStaition.cwa) {      
+    if (infoForStaition.cwa) {
       fetch(
         `https://api.weather.gov/gridpoints/${infoForStaition.cwa}/${infoForStaition.gridX},${infoForStaition.gridY}/forecast/`
       )
@@ -103,22 +106,34 @@ const InputCity: FC = () => {
     });
   }, [weatherInfo]);
 
+  const onSearch: any = (value: any) => {
+    const isValid = /^[a-zA-Z ]+$/.test(value);
+    if (isValid) {
+      setErrorValidaion(false);
+      setNameCity(value);
+    } else {
+      setErrorValidaion(true);
+    }
+  };
+
   console.log(data);
 
   return (
-    <div>
+    <div className="input">
+      {errorValidation && <div className='input__valid'>Please enter a valid name's City</div>}
       <Search
         placeholder="Input USA's city for getting weather"
-        onSearch={(e: string) => setNameCity(e)}
+        onSearch={onSearch}
         enterButton
       />
-      { sessionStorage.length ? (
+
+      {sessionStorage.length ? (
         <Weather data={data} />
       ) : (
-        <div> Input USA's city for getting weather </div>
+        <div className="input__info">Input USA's city for getting weather</div>
       )}
     </div>
   );
 };
 
-export default InputCity;
+export default WeatherInfo;

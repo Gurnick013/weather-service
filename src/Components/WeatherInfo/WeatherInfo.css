@@ -1,0 +1,10 @@
+.input__info {
+    padding: 10px;
+}
+
+.input__valid {
+    position: absolute;
+    top: 5px;
+    color: red;
+    font-weight: bold;
+}
