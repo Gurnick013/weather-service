@@ -1,10 +1,9 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { IGetInfo } from "../constants/constants";
 import "antd/dist/antd.css";
 import "./Weather.css";
 import Cards from "../Cards/Cards";
 import { Spin } from "antd";
-import { useEffect } from "react";
 
 const Weather: FC<IGetInfo> = ({ data }) => {
  

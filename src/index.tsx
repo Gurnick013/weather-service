@@ -1,5 +1,13 @@
 import ReactDOM from "react-dom";
 import "./index.css";
+
+import { Provider } from "react-redux";
+import { store } from "./core/store";
 import GlobalWeatherService from "./Components/GlobalWeatherService";
 
-ReactDOM.render(<GlobalWeatherService />, document.getElementById("root"));
+ReactDOM.render(
+  <Provider store={store}>
+    <GlobalWeatherService />
+  </Provider>,
+  document.getElementById("root")
+);
