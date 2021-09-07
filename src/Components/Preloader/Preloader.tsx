@@ -2,12 +2,12 @@ import { FC } from "react";
 import { Spin } from "antd";
 import "antd/dist/antd.css";
 
-const Preloaded: FC = () => {
+const  Preloader: FC = () => {
   return (
-    <div>
+    <>
       <Spin size="large" />
-    </div>
+    </>
   );
 };
 
-export default Preloaded;
+export default Preloader;

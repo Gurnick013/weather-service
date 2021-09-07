@@ -1,26 +1,28 @@
 import { FC } from "react";
-import { Card } from "antd";
+import {
+  changeTemtTocelsius,
+  IArrayInfo,
+} from "../../core/constants/constants";
 import Meta from "antd/lib/card/Meta";
-import { changeTemtTocelsius, IArrayInfo } from "../constants/constants";
-import "antd/dist/antd.css";
+import { Card } from "antd";
 import "./Cards.css";
 
 const Cards: FC<IArrayInfo> = ({ arrInfo }) => {
   return (
     <>
-      <Card title={arrInfo[0][0]} hoverable style={{ width: 250 }}>
-        <h5 className="card__title">{arrInfo[0][1].name}</h5>
+      <Card title={arrInfo.name} hoverable className="card-main">
+        <h5 className="card-main__title">{arrInfo.name}</h5>
       </Card>
       <Card
+        className="card-img"
         hoverable
-        style={{ width: 250 }}
-        cover={<img alt="img" src={arrInfo[0][1].icon} />}
+        cover={<img alt="img" src={arrInfo.icon} />}
       >
         <Meta
-          title={`${arrInfo[0][1].temperature} ${
-            arrInfo[0][1].temperatureUnit
-          } ${changeTemtTocelsius(arrInfo[0][1].temperature)} C`}
-          description={arrInfo[0][1].shortForecast}
+          title={`${arrInfo.temperature} ${
+            arrInfo.temperatureUnit
+          } ${changeTemtTocelsius(arrInfo.temperature)} C`}
+          description={arrInfo.shortForecast}
         />
       </Card>
     </>

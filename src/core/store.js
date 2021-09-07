@@ -1,19 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { setupListeners } from "@reduxjs/toolkit/dist/query";
-import {
-  fetchCityName,
-  fetchWeatherInfoForCity,
-} from "../service/useQuery";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import useWeatherReducer from "./reducers/useWeatherReducer";
 
 export const store = configureStore({
   reducer: {
-    [fetchCityName.reducerPath]: fetchCityName.reducer,
-    [fetchWeatherInfoForCity.reducerPath]: fetchWeatherInfoForCity.reducer,
+    weather: useWeatherReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(fetchCityName.middleware)
-      .concat(fetchWeatherInfoForCity.middleware),
+  middleware: [...getDefaultMiddleware()],
 });
-
-setupListeners(store.dispatch);

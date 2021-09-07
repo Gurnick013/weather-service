@@ -1,4 +1,10 @@
 .ant-card-body {
-    padding: 10px;
+  padding: 10px;
+}
+.card-main {
+  width: 250px;
 }
 
+.card-img {
+  width: 250px;
+}
