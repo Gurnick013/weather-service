@@ -1,45 +1,30 @@
-import { FC, useState, useEffect } from "react";
+import { FC } from "react";
 import { useSelector } from "react-redux";
 import Preloaded from "../Preloader/Preloader";
 import Cards from "../Cards/Cards";
-import { IGetInfo } from "../../core/constants/constants";
 import "./Weather.css";
 
-const Weather: FC<IGetInfo> = ({ data }) => {
- 
-  const weather = useSelector((state: any) => state.weather.WeatherInfo);
-
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+const Weather: FC = () => {
+  const weather = useSelector((state: any) => state.weather.weatherInfo);
+  const isLoaded = useSelector((state: any) => state.weather.isLoaded);  
 
   // For sessionStorage
 
-  // const arrayCityInfoFromStorage = Object.entries(sessionStorage);
-  // const filterArrayCityInfoFromStorage = arrayCityInfoFromStorage.map(
+  // const cityInfoFromStorage = Object.entries(sessionStorage).map(
   //   (el: Array<any>) => [el[0], JSON.parse(el[1])]
   // );
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoaded(true);
-    }, 1000);    
-    return () => {
-      setIsLoaded(false); 
-    }
-  }, [data]); 
-  
-  const itemWeather = weather.map(
-    (arrInfo: any, index: any) => (
-      <div key={index.toString()} className="wrapper__card">
-        <Cards arrInfo={arrInfo} />
-      </div>
-    )
-  );
+  const itemWeather = weather.map((arrInfo: any, index: any) => (
+    <div key={arrInfo.icon} className="wrapper__card">
+      <Cards arrInfo={arrInfo} />
+    </div>
+  ));
 
   return (
     <>
-      {!isLoaded ? (
+      {isLoaded ? (
         <div className="preloaded">
-          <Preloaded/>
+          <Preloaded />
         </div>
       ) : (
         <div className="wrapper">{itemWeather}</div>

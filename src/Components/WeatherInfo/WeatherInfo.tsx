@@ -7,6 +7,7 @@ import {
   getInfoStation,
 } from "../../service/fetchWeather";
 import Weather from "../Weather/Weather";
+import Error from "../Error/Error";
 import { Input } from "antd";
 import "./WeatherInfo.css";
 
@@ -14,10 +15,12 @@ const { Search }: any = Input;
 
 const WeatherInfo: FC = () => {
   const dispatch = useDispatch();
+
+  const city = useSelector((state: any) => state.weather.cities);
   const geoCity: any = useSelector((state: any) => state.weather.geoInfo);
   const forecast: any = useSelector((state: any) => state.weather.infoStaition);
   const [errorValidation, setErrorValidaion] = useState<boolean>(false);
-  const [cityName, setNameCity] = useState<string>("");
+  const [cityName, setCityName] = useState<string>("");
 
   useEffect(() => {
     if (cityName) {
@@ -26,21 +29,28 @@ const WeatherInfo: FC = () => {
   }, [cityName, dispatch]);
 
   useEffect(() => {
-    if (geoCity !== []) {
+    if (geoCity !== [] && cityName !== "") {
       dispatch(getInfoStation(geoCity));
     }
-  }, [geoCity, dispatch]);
+  }, [geoCity]);
 
   useEffect(() => {
-    if (forecast !== []) dispatch(getchWeather(forecast));
-  }, [forecast, dispatch]);
+    if (forecast !== [] && cityName !== "") {
+      dispatch(addCityName(cityName.toUpperCase()));
+      dispatch(getchWeather(forecast));
+    }
+  }, [forecast]);
 
   const onSearch: any = (value: any) => {
     const isValid = /^[a-zA-Z ]+$/.test(value);
+    const filter = city.filter(
+      (name: string) => name.toUpperCase() === value.toUpperCase()
+    ).length;
     if (isValid) {
       setErrorValidaion(false);
-      setNameCity(value);
-      dispatch(addCityName(value));
+      if (!filter && geoCity !== []) {
+        setCityName(value.toUpperCase());
+      }
     } else {
       setErrorValidaion(true);
     }
@@ -48,19 +58,14 @@ const WeatherInfo: FC = () => {
 
   return (
     <div className="input">
-      {errorValidation && (
-        <div className="input__valid">
-          Please enter a valid or correctly name's city
-        </div>
-      )}
+      {errorValidation && <Error />}
       <Search
         placeholder="Input USA's city for getting weather"
         onSearch={onSearch}
         enterButton
       />
-
       {cityName ? (
-        <Weather data={cityName} />
+        <Weather />
       ) : (
         <div className="input__info">Input USA's city for getting weather</div>
       )}

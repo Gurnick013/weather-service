@@ -28,7 +28,7 @@ export const getInfoStation: AsyncThunk<any, any, any> = createAsyncThunk(
 export const getchWeather: AsyncThunk<any, any, any> = createAsyncThunk(
   "weather",
   async (forecast) => {
-    const response = await axios.get(`${forecast}`);    
+    const response = await axios.get(`${forecast}`);
     return response.data.properties.periods
       .filter(
         (el: any) =>

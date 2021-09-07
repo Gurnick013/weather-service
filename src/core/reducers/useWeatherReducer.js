@@ -8,16 +8,16 @@ import {
 const useWeatherReducer = createSlice({
   name: "weather",
   initialState: {
-    citiesInfo: [],
+    cities: [],
     isLoaded: false,
     geoInfo: [],
     infoStaition: [],
-    WeatherInfo: [],
+    weatherInfo: [],
     error: [],
   },
   reducers: {
     addCityName: (state, action) => {
-      state.citiesInfo = [...state.citiesInfo, action.payload];
+      state.cities = [...state.cities, action.payload];
     },
   },
   extraReducers: {
@@ -25,11 +25,9 @@ const useWeatherReducer = createSlice({
       state.isLoaded = true;
     },
     [getGeoCity.fulfilled]: (state, action) => {
-      state.isLoaded = false;
       state.geoInfo = action.payload;
     },
     [getGeoCity.rejected]: (state, action) => {
-      state.isLoaded = false;
       state.error = action.payload;
     },
     [getInfoStation.pending]: (state, action) => {
@@ -48,7 +46,7 @@ const useWeatherReducer = createSlice({
     },
     [getchWeather.fulfilled]: (state, action) => {
       state.isLoaded = false;
-      state.WeatherInfo = [...state.WeatherInfo, action.payload];
+      state.weatherInfo = [...state.weatherInfo, action.payload];
     },
     [getchWeather.rejected]: (state, action) => {
       state.isLoaded = false;
@@ -57,7 +55,6 @@ const useWeatherReducer = createSlice({
   },
 });
 
-export const { addCityName, addInfoStation, addInfoWeather } =
-  useWeatherReducer.actions;
+export const { addCityName } = useWeatherReducer.actions;
 
 export default useWeatherReducer.reducer;
